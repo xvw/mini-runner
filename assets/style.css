@@ -1,3 +1,23 @@
 body {
     background-color: #000;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+main {
+    margin: auto;
+}
+
+canvas {
+    background-color: white;
+    width: 720px;
+    height: 200px;
+}
+
+#assets {
+    display: none;
 }
