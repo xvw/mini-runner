@@ -1,10 +1,12 @@
 // A small game writted in JavaScript
 
 // Canvas element
-const width   = 720;
-const height  = 200;
-const canvas  = document.getElementById('game');
-const context = canvas.getContext('2d'); 
+const width    = 720;
+const height   = 200;
+const canvas   = document.getElementById('game');
+const context  = canvas.getContext('2d');
+const jumptime = 10;
+const jumphigh = 72;
 
 
 // Utils
@@ -44,9 +46,7 @@ class Bitmap_fun {
     constructor(callback) {
 	this.fun = callback;
     }
-    draw(x, y) {
-	this.fun(canvas, context, x, y);
-    }
+    draw(x, y) { this.fun(canvas, context, x, y); }
     
 }
 
@@ -72,8 +72,64 @@ class Rect extends Sprite {
 class Game_player extends Point {
     constructor() {
 	super(10, 160);
+	this.attachEvents();
+	this.base_y = this.y;
+	this.jump = false;
+	this.fall = false;
+	this.jumpTick = 0;
     }
+
+    attachEvents() {
+	let that = this;
+	window.document.onkeydown = function(ev) {
+	    let kc = ev.keyCode;
+	    if (that.canJump() && (kc == 32 || kc == 38)) {
+		that.performJump();
+	    }
+	}
+    }
+
+    performJump() {
+	this.jump = true;
+	console.log('jump');
+    }
+
+    performFall() {
+	this.jump = false;
+	this.fall = true;
+    }
+
+    canJump() {
+	return !this.jump && !this.fall;
+    }
+
+    coeffJump() {
+	if (this.jump) {
+	    return 1;
+	}
+	return -1;
+    }
+    
     update() {
+	console.log(this.jumpTick);
+	if (this.jump || this.fall) {
+	    this.jumpTick += this.coeffJump();
+	}
+	if (this.jump && this.jumpTick > jumptime) {
+	    this.performFall();
+	}
+	if (this.fall && this.jumpTick < 0) {
+	    this.jumpTick = 0;
+	    this.fall = false;
+	}
+	this.y = this.computeY();
+    }
+
+    computeY() {
+	// This function need EASING !
+	const c = this.jumpTick.toFixed(2) / jumptime.toFixed(2);
+	const f = c * jumphigh.toFixed(2);
+	return this.base_y - f.toFixed(1);
     }
 }
 

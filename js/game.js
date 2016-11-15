@@ -68,6 +68,8 @@
 			var height = 200;
 			var canvas = document.getElementById('game');
 			var context = canvas.getContext('2d');
+			var jumptime = 10;
+			var jumphigh = 72;
 
 			// Utils
 
@@ -180,12 +182,75 @@
 						function Game_player() {
 									_classCallCheck(this, Game_player);
 
-									return _possibleConstructorReturn(this, (Game_player.__proto__ || Object.getPrototypeOf(Game_player)).call(this, 20, 160));
+									var _this3 = _possibleConstructorReturn(this, (Game_player.__proto__ || Object.getPrototypeOf(Game_player)).call(this, 10, 160));
+
+									_this3.attachEvents();
+									_this3.base_y = _this3.y;
+									_this3.jump = false;
+									_this3.fall = false;
+									_this3.jumpTick = 0;
+									return _this3;
 						}
 
 						_createClass(Game_player, [{
+									key: 'attachEvents',
+									value: function attachEvents() {
+												var that = this;
+												window.document.onkeydown = function (ev) {
+															var kc = ev.keyCode;
+															if (that.canJump() && (kc == 32 || kc == 38)) {
+																		that.performJump();
+															}
+												};
+									}
+						}, {
+									key: 'performJump',
+									value: function performJump() {
+												this.jump = true;
+												console.log('jump');
+									}
+						}, {
+									key: 'performFall',
+									value: function performFall() {
+												this.jump = false;
+												this.fall = true;
+									}
+						}, {
+									key: 'canJump',
+									value: function canJump() {
+												return !this.jump && !this.fall;
+									}
+						}, {
+									key: 'coeffJump',
+									value: function coeffJump() {
+												if (this.jump) {
+															return 1;
+												}
+												return -1;
+									}
+						}, {
 									key: 'update',
-									value: function update() {}
+									value: function update() {
+												console.log(this.jumpTick);
+												if (this.jump || this.fall) {
+															this.jumpTick += this.coeffJump();
+												}
+												if (this.jump && this.jumpTick > jumptime) {
+															this.performFall();
+												}
+												if (this.fall && this.jumpTick < 0) {
+															this.jumpTick = 0;
+															this.fall = false;
+												}
+												this.y = this.computeY();
+									}
+						}, {
+									key: 'computeY',
+									value: function computeY() {
+												var c = this.jumpTick.toFixed(2) / jumptime.toFixed(2);
+												var f = c * jumphigh.toFixed(2);
+												return this.base_y - f.toFixed(1);
+									}
 						}]);
 
 						return Game_player;
