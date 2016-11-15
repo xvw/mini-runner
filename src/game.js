@@ -154,7 +154,7 @@ class Sprite_player extends Sprite {
     constructor(player) {
 	super();
 	this.player = player;
-	this.bitmap = new Rect('red', 32, 32);
+	this.bitmap = new Rect('#DBDFE8', 32, 32);
     }
     update() {
 	this.player.update();

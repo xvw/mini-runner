@@ -285,7 +285,7 @@
 									var _this5 = _possibleConstructorReturn(this, (Sprite_player.__proto__ || Object.getPrototypeOf(Sprite_player)).call(this));
 
 									_this5.player = player;
-									_this5.bitmap = new Rect('red', 32, 32);
+									_this5.bitmap = new Rect('#DBDFE8', 32, 32);
 									return _this5;
 						}
 
