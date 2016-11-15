@@ -5,8 +5,8 @@ const width    = 720;
 const height   = 200;
 const canvas   = document.getElementById('game');
 const context  = canvas.getContext('2d');
-const jumptime = 10;
-const jumphigh = 72;
+const jumptime = 12;
+const jumphigh = 112;
 
 
 // Utils
@@ -77,6 +77,7 @@ class Game_player extends Point {
 	this.jump = false;
 	this.fall = false;
 	this.jumpTick = 0;
+	this.tick     = 1;
     }
 
     attachEvents() {
@@ -109,10 +110,15 @@ class Game_player extends Point {
 	}
 	return -1;
     }
-    
+
     update() {
-	console.log(this.jumpTick);
+	this.updateWalk();
+	this.updateJump();
+    }
+    
+    updateJump() {
 	if (this.jump || this.fall) {
+	    console.log(this.jumpTick);
 	    this.jumpTick += this.coeffJump();
 	}
 	if (this.jump && this.jumpTick > jumptime) {
@@ -125,8 +131,17 @@ class Game_player extends Point {
 	this.y = this.computeY();
     }
 
+    updateWalk() {
+	if (this.canJump()) {
+	    this.tick += 1;
+	    this.tick %= 8;
+	    if (this.tick == 0) {
+		console.log('Step walk');
+	    }
+	}
+    }
+
     computeY() {
-	// This function need EASING !
 	const c = this.jumpTick.toFixed(2) / jumptime.toFixed(2);
 	const f = c * jumphigh.toFixed(2);
 	return this.base_y - f.toFixed(1);

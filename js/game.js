@@ -68,8 +68,8 @@
 			var height = 200;
 			var canvas = document.getElementById('game');
 			var context = canvas.getContext('2d');
-			var jumptime = 10;
-			var jumphigh = 72;
+			var jumptime = 12;
+			var jumphigh = 112;
 
 			// Utils
 
@@ -189,6 +189,7 @@
 									_this3.jump = false;
 									_this3.fall = false;
 									_this3.jumpTick = 0;
+									_this3.tick = 1;
 									return _this3;
 						}
 
@@ -231,8 +232,14 @@
 						}, {
 									key: 'update',
 									value: function update() {
-												console.log(this.jumpTick);
+												this.updateWalk();
+												this.updateJump();
+									}
+						}, {
+									key: 'updateJump',
+									value: function updateJump() {
 												if (this.jump || this.fall) {
+															console.log(this.jumpTick);
 															this.jumpTick += this.coeffJump();
 												}
 												if (this.jump && this.jumpTick > jumptime) {
@@ -243,6 +250,17 @@
 															this.fall = false;
 												}
 												this.y = this.computeY();
+									}
+						}, {
+									key: 'updateWalk',
+									value: function updateWalk() {
+												if (this.canJump()) {
+															this.tick += 1;
+															this.tick %= 8;
+															if (this.tick == 0) {
+																		console.log('Step walk');
+															}
+												}
 									}
 						}, {
 									key: 'computeY',
