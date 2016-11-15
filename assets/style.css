@@ -14,8 +14,8 @@ main {
 
 canvas {
     background-color: white;
-    width: 720px;
-    height: 200px;
+    width: 0px;
+    height: 0px;
 }
 
 #assets {
