@@ -1,4 +1,4 @@
-// A small game writted in JavaScript
+// A small game written in JavaScript
 
 // Canvas element
 const width    = 720;
