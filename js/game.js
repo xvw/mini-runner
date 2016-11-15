@@ -70,6 +70,7 @@
 			var context = canvas.getContext('2d');
 			var jumptime = 12;
 			var jumphigh = 112;
+			var walkrate = 24;
 
 			// Utils
 
@@ -165,9 +166,8 @@
 									_this2.width = w;
 									_this2.height = h;
 									_this2.color = color;
-									var that = _this2;
 									_this2.bitmap = new Bitmap_fun(function (c, ctx, x, y) {
-												ctx.fillStyle = that.color;
+												ctx.fillStyle = _this2.color;
 												ctx.fillRect(x, y, w, h);
 									});
 									return _this2;
@@ -196,11 +196,12 @@
 						_createClass(Game_player, [{
 									key: 'attachEvents',
 									value: function attachEvents() {
-												var that = this;
+												var _this4 = this;
+
 												window.document.onkeydown = function (ev) {
 															var kc = ev.keyCode;
-															if (that.canJump() && (kc == 32 || kc == 38)) {
-																		that.performJump();
+															if (_this4.canJump() && (kc == 32 || kc == 38)) {
+																		_this4.performJump();
 															}
 												};
 									}
@@ -247,6 +248,7 @@
 												}
 												if (this.fall && this.jumpTick < 0) {
 															this.jumpTick = 0;
+															this.tick = 1;
 															this.fall = false;
 												}
 												this.y = this.computeY();
@@ -256,7 +258,7 @@
 									value: function updateWalk() {
 												if (this.canJump()) {
 															this.tick += 1;
-															this.tick %= 8;
+															this.tick %= walkrate;
 															if (this.tick == 0) {
 																		console.log('Step walk');
 															}
@@ -280,11 +282,11 @@
 						function Sprite_player(player) {
 									_classCallCheck(this, Sprite_player);
 
-									var _this4 = _possibleConstructorReturn(this, (Sprite_player.__proto__ || Object.getPrototypeOf(Sprite_player)).call(this));
+									var _this5 = _possibleConstructorReturn(this, (Sprite_player.__proto__ || Object.getPrototypeOf(Sprite_player)).call(this));
 
-									_this4.player = player;
-									_this4.bitmap = new Rect('red', 32, 32);
-									return _this4;
+									_this5.player = player;
+									_this5.bitmap = new Rect('red', 32, 32);
+									return _this5;
 						}
 
 						_createClass(Sprite_player, [{

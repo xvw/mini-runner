@@ -7,6 +7,7 @@ const canvas   = document.getElementById('game');
 const context  = canvas.getContext('2d');
 const jumptime = 12;
 const jumphigh = 112;
+const walkrate = 24;
 
 
 // Utils
@@ -58,9 +59,8 @@ class Rect extends Sprite {
 	this.width  = w;
 	this.height = h;
 	this.color  = color;
-	let that = this;
-	this.bitmap = new Bitmap_fun(function(c, ctx, x, y) {
-	    ctx.fillStyle = that.color;
+	this.bitmap = new Bitmap_fun((c, ctx, x, y) => {
+	    ctx.fillStyle = this.color;
 	    ctx.fillRect(x ,y, w, h);
 	});
     }
@@ -81,11 +81,10 @@ class Game_player extends Point {
     }
 
     attachEvents() {
-	let that = this;
-	window.document.onkeydown = function(ev) {
+	window.document.onkeydown = (ev) => {
 	    let kc = ev.keyCode;
-	    if (that.canJump() && (kc == 32 || kc == 38)) {
-		that.performJump();
+	    if (this.canJump() && (kc == 32 || kc == 38)) {
+		this.performJump();
 	    }
 	}
     }
@@ -126,6 +125,7 @@ class Game_player extends Point {
 	}
 	if (this.fall && this.jumpTick < 0) {
 	    this.jumpTick = 0;
+	    this.tick = 1;
 	    this.fall = false;
 	}
 	this.y = this.computeY();
@@ -134,7 +134,7 @@ class Game_player extends Point {
     updateWalk() {
 	if (this.canJump()) {
 	    this.tick += 1;
-	    this.tick %= 8;
+	    this.tick %= walkrate;
 	    if (this.tick == 0) {
 		console.log('Step walk');
 	    }
