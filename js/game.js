@@ -61,16 +61,31 @@
 						};
 			}();
 
-			// A small game writted in JavaScript
+			// A small game written in JavaScript
 
-			// Canvas element
-			var width = 720;
-			var height = 200;
 			var canvas = document.getElementById('game');
 			var context = canvas.getContext('2d');
-			var jumptime = 12;
-			var jumphigh = 112;
-			var walkrate = 24;
+
+			var Config = {
+
+						// Canvas data
+						width: 720,
+						height: 200,
+						ground_h: 16,
+						player_h: 54,
+						player_w: 32,
+
+						// Character
+						gravity: 12,
+						inertia: 180,
+						walkrate: 24,
+
+						// Colors (for boxes)
+						colors: {
+									player: '#DBDFE8',
+									ground: '#24476F'
+						}
+			};
 
 			// Utils
 
@@ -182,7 +197,7 @@
 						function Game_player() {
 									_classCallCheck(this, Game_player);
 
-									var _this3 = _possibleConstructorReturn(this, (Game_player.__proto__ || Object.getPrototypeOf(Game_player)).call(this, 10, 160));
+									var _this3 = _possibleConstructorReturn(this, (Game_player.__proto__ || Object.getPrototypeOf(Game_player)).call(this, 10, Config.height - Config.ground_h - Config.player_h));
 
 									_this3.attachEvents();
 									_this3.base_y = _this3.y;
@@ -243,7 +258,7 @@
 															console.log(this.jumpTick);
 															this.jumpTick += this.coeffJump();
 												}
-												if (this.jump && this.jumpTick > jumptime) {
+												if (this.jump && this.jumpTick > Config.gravity) {
 															this.performFall();
 												}
 												if (this.fall && this.jumpTick < 0) {
@@ -258,7 +273,7 @@
 									value: function updateWalk() {
 												if (this.canJump()) {
 															this.tick += 1;
-															this.tick %= walkrate;
+															this.tick %= Config.walkrate;
 															if (this.tick == 0) {
 																		console.log('Step walk');
 															}
@@ -267,8 +282,8 @@
 						}, {
 									key: 'computeY',
 									value: function computeY() {
-												var c = this.jumpTick.toFixed(2) / jumptime.toFixed(2);
-												var f = c * jumphigh.toFixed(2);
+												var c = this.jumpTick.toFixed(2) / Config.gravity.toFixed(2);
+												var f = c * Config.inertia.toFixed(2);
 												return this.base_y - f.toFixed(1);
 									}
 						}]);
@@ -285,7 +300,7 @@
 									var _this5 = _possibleConstructorReturn(this, (Sprite_player.__proto__ || Object.getPrototypeOf(Sprite_player)).call(this));
 
 									_this5.player = player;
-									_this5.bitmap = new Rect('#DBDFE8', 32, 32);
+									_this5.bitmap = new Rect(Config.colors.player, Config.player_w, Config.player_h);
 									return _this5;
 						}
 
@@ -316,13 +331,20 @@
 									key: 'update',
 									value: function update(game) {
 												this.internalClock();
-												context.clearRect(0, 0, width, height);
+												this.redesignGround();
 												// console.log(this.clock);
 												this.performUpdate();
 												// Buffered Loop
 												window.requestAnimationFrame(function () {
 															game.update(game);
 												});
+									}
+						}, {
+									key: 'redesignGround',
+									value: function redesignGround() {
+												context.clearRect(0, 0, Config.width, Config.height);
+												context.fillStyle = Config.colors.ground;
+												context.fillRect(0, Config.height - Config.ground_h, Config.width, Config.ground_h);
 									}
 						}, {
 									key: 'performUpdate',
@@ -338,10 +360,10 @@
 						}, {
 									key: 'initializeCanvas',
 									value: function initializeCanvas() {
-												canvas.width = width;
-												canvas.height = height;
-												canvas.style.width = '' + width + 'px';
-												canvas.style.height = '' + height + 'px';
+												canvas.width = Config.width;
+												canvas.height = Config.height;
+												canvas.style.width = '' + Config.width + 'px';
+												canvas.style.height = '' + Config.height + 'px';
 									}
 						}, {
 									key: 'initializeSprites',

@@ -1,13 +1,28 @@
 // A small game written in JavaScript
 
-// Canvas element
-const width    = 720;
-const height   = 200;
 const canvas   = document.getElementById('game');
 const context  = canvas.getContext('2d');
-const jumptime = 12;
-const jumphigh = 112;
-const walkrate = 24;
+
+const Config   = {
+    
+    // Canvas data
+    width    : 720,
+    height   : 200,
+    ground_h : 16,
+    player_h : 54,
+    player_w : 32,
+    
+    // Character
+    gravity  : 12,
+    inertia  : 180,
+    walkrate : 24,
+    
+    // Colors (for boxes)
+    colors : {
+	player : '#DBDFE8',
+	ground : '#24476F',
+    }
+}
 
 
 // Utils
@@ -71,7 +86,7 @@ class Rect extends Sprite {
 // Player
 class Game_player extends Point {
     constructor() {
-	super(10, 160);
+	super(10, Config.height - Config.ground_h - Config.player_h);
 	this.attachEvents();
 	this.base_y = this.y;
 	this.jump = false;
@@ -120,7 +135,7 @@ class Game_player extends Point {
 	    console.log(this.jumpTick);
 	    this.jumpTick += this.coeffJump();
 	}
-	if (this.jump && this.jumpTick > jumptime) {
+	if (this.jump && this.jumpTick > Config.gravity) {
 	    this.performFall();
 	}
 	if (this.fall && this.jumpTick < 0) {
@@ -134,7 +149,7 @@ class Game_player extends Point {
     updateWalk() {
 	if (this.canJump()) {
 	    this.tick += 1;
-	    this.tick %= walkrate;
+	    this.tick %= Config.walkrate;
 	    if (this.tick == 0) {
 		console.log('Step walk');
 	    }
@@ -142,8 +157,8 @@ class Game_player extends Point {
     }
 
     computeY() {
-	const c = this.jumpTick.toFixed(2) / jumptime.toFixed(2);
-	const f = c * jumphigh.toFixed(2);
+	const c = this.jumpTick.toFixed(2) / Config.gravity.toFixed(2);
+	const f = c * Config.inertia.toFixed(2);
 	return this.base_y - f.toFixed(1);
     }
 }
@@ -154,7 +169,7 @@ class Sprite_player extends Sprite {
     constructor(player) {
 	super();
 	this.player = player;
-	this.bitmap = new Rect('#DBDFE8', 32, 32);
+	this.bitmap = new Rect(Config.colors.player, Config.player_w, Config.player_h);
     }
     update() {
 	this.player.update();
@@ -178,7 +193,7 @@ class Area {
 
     update(game) {
 	this.internalClock();
-	context.clearRect(0,0,width, height);
+	this.redesignGround();
 	// console.log(this.clock);
 	this.performUpdate();
 	// Buffered Loop
@@ -186,6 +201,12 @@ class Area {
 	    game.update(game);
 	});
 
+    }
+
+    redesignGround() {
+	context.clearRect(0,0,Config.width, Config.height);
+	context.fillStyle = Config.colors.ground;
+	context.fillRect(0, Config.height - Config.ground_h, Config.width, Config.ground_h);
     }
 
     performUpdate() {
@@ -198,10 +219,10 @@ class Area {
     }
 
     initializeCanvas() {
-	canvas.width        = width;
-	canvas.height       = height;
-	canvas.style.width  = ''+width+'px';
-	canvas.style.height = ''+height+'px';
+	canvas.width        = Config.width;
+	canvas.height       = Config.height;
+	canvas.style.width  = ''+Config.width+'px';
+	canvas.style.height = ''+Config.height+'px';
     }
 
     initializeSprites() {
