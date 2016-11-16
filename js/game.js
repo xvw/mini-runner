@@ -339,7 +339,7 @@
 												this.internalClock();
 												this.redesignGround();
 												this.rewriteScore();
-												// console.log(this.clock);
+												this.garbageCollector();
 												this.performUpdate();
 												// Buffered Loop
 												window.requestAnimationFrame(function () {
@@ -349,10 +349,12 @@
 						}, {
 									key: 'rewriteScore',
 									value: function rewriteScore() {
-												context.font = "12px Arial";
+												context.font = "12px sans-serif";
 												context.fillStyle = Config.colors.score;
 												context.textAlign = "right";
-												context.fillText(this.score, Config.width - 16, 16);
+												var f = ' pt';
+												if (this.score > 1) f += 's';
+												context.fillText(this.score + f, Config.width - 8, 16);
 									}
 						}, {
 									key: 'redesignGround',
@@ -375,7 +377,6 @@
 												this.tick %= 60;
 												if (this.tick == 0) {
 															this.score += 1;
-															console.log(this.score);
 												}
 									}
 						}, {
@@ -390,6 +391,14 @@
 									key: 'initializeSprites',
 									value: function initializeSprites() {
 												this.sprite_player = new Sprite_player(this.player);
+												this.clouds = [];
+												this.objs = [];
+												this.flyings = [];
+									}
+						}, {
+									key: 'garbageCollector',
+									value: function garbageCollector() {
+												// Remove useless sprites
 									}
 						}, {
 									key: 'getPlayer',

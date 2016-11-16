@@ -192,15 +192,15 @@ class Area {
 	this.initializeCanvas();
 	this.player = new Game_player();
 	this.initializeSprites();
-	this.tick  = 0;
-	this.score = 0;
+	this.tick    = 0;
+	this.score   = 0;
     }
 
     update(game) {
 	this.internalClock();
 	this.redesignGround();
 	this.rewriteScore();
-	// console.log(this.clock);
+	this.garbageCollector();
 	this.performUpdate();
 	// Buffered Loop
 	window.requestAnimationFrame(function() {
@@ -210,10 +210,12 @@ class Area {
     }
 
     rewriteScore() {
-	context.font      = "12px Arial";
+	context.font      = "12px sans-serif";
 	context.fillStyle = Config.colors.score;
 	context.textAlign = "right";
-	context.fillText(this.score, Config.width - 16, 16);
+	let f = ' pt';
+	if (this.score > 1) f += 's';
+	context.fillText(this.score+f, Config.width - 8, 16);
     }
 
     redesignGround() {
@@ -245,6 +247,13 @@ class Area {
 
     initializeSprites() {
 	this.sprite_player = new Sprite_player(this.player);
+	this.clouds  = [];
+	this.objs    = [];
+	this.flyings = [];
+    }
+
+    garbageCollector() {
+	// Remove useless sprites
     }
 
     getPlayer() {
