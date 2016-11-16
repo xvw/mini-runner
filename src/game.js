@@ -21,6 +21,7 @@ const Config   = {
     colors : {
 	player : '#DBDFE8',
 	ground : '#24476F',
+	score  : '#ECD900',
     }
 }
 
@@ -106,7 +107,6 @@ class Game_player extends Point {
 
     performJump() {
 	this.jump = true;
-	console.log('jump');
     }
 
     performFall() {
@@ -132,7 +132,6 @@ class Game_player extends Point {
     
     updateJump() {
 	if (this.jump || this.fall) {
-	    console.log(this.jumpTick);
 	    this.jumpTick += this.coeffJump();
 	}
 	if (this.jump && this.jumpTick > Config.gravity) {
@@ -151,9 +150,13 @@ class Game_player extends Point {
 	    this.tick += 1;
 	    this.tick %= Config.walkrate;
 	    if (this.tick == 0) {
-		console.log('Step walk');
+		this.switchSpriteForWalk();
 	    }
 	}
+    }
+
+    switchSpriteForWalk() {
+	// TODO
     }
 
     computeY() {
@@ -189,11 +192,14 @@ class Area {
 	this.initializeCanvas();
 	this.player = new Game_player();
 	this.initializeSprites();
+	this.tick  = 0;
+	this.score = 0;
     }
 
     update(game) {
 	this.internalClock();
 	this.redesignGround();
+	this.rewriteScore();
 	// console.log(this.clock);
 	this.performUpdate();
 	// Buffered Loop
@@ -201,6 +207,13 @@ class Area {
 	    game.update(game);
 	});
 
+    }
+
+    rewriteScore() {
+	context.font      = "12px Arial";
+	context.fillStyle = Config.colors.score;
+	context.textAlign = "right";
+	context.fillText(this.score, Config.width - 16, 16);
     }
 
     redesignGround() {
@@ -216,6 +229,11 @@ class Area {
 
     internalClock() {
 	this.clock = new Date();
+	this.tick += 1;
+	this.tick %= 60;
+	if(this.tick == 0) {
+	    this.score += 1;
+	}
     }
 
     initializeCanvas() {

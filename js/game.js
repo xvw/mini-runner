@@ -83,7 +83,8 @@
 						// Colors (for boxes)
 						colors: {
 									player: '#DBDFE8',
-									ground: '#24476F'
+									ground: '#24476F',
+									score: '#ECD900'
 						}
 			};
 
@@ -224,7 +225,6 @@
 									key: 'performJump',
 									value: function performJump() {
 												this.jump = true;
-												console.log('jump');
 									}
 						}, {
 									key: 'performFall',
@@ -255,7 +255,6 @@
 									key: 'updateJump',
 									value: function updateJump() {
 												if (this.jump || this.fall) {
-															console.log(this.jumpTick);
 															this.jumpTick += this.coeffJump();
 												}
 												if (this.jump && this.jumpTick > Config.gravity) {
@@ -275,9 +274,14 @@
 															this.tick += 1;
 															this.tick %= Config.walkrate;
 															if (this.tick == 0) {
-																		console.log('Step walk');
+																		this.switchSpriteForWalk();
 															}
 												}
+									}
+						}, {
+									key: 'switchSpriteForWalk',
+									value: function switchSpriteForWalk() {
+												// TODO
 									}
 						}, {
 									key: 'computeY',
@@ -325,6 +329,8 @@
 									this.initializeCanvas();
 									this.player = new Game_player();
 									this.initializeSprites();
+									this.tick = 0;
+									this.score = 0;
 						}
 
 						_createClass(Area, [{
@@ -332,12 +338,21 @@
 									value: function update(game) {
 												this.internalClock();
 												this.redesignGround();
+												this.rewriteScore();
 												// console.log(this.clock);
 												this.performUpdate();
 												// Buffered Loop
 												window.requestAnimationFrame(function () {
 															game.update(game);
 												});
+									}
+						}, {
+									key: 'rewriteScore',
+									value: function rewriteScore() {
+												context.font = "12px Arial";
+												context.fillStyle = Config.colors.score;
+												context.textAlign = "right";
+												context.fillText(this.score, Config.width - 16, 16);
 									}
 						}, {
 									key: 'redesignGround',
@@ -356,6 +371,12 @@
 									key: 'internalClock',
 									value: function internalClock() {
 												this.clock = new Date();
+												this.tick += 1;
+												this.tick %= 60;
+												if (this.tick == 0) {
+															this.score += 1;
+															console.log(this.score);
+												}
 									}
 						}, {
 									key: 'initializeCanvas',
