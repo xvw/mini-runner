@@ -3,7 +3,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 module.exports = {
   entry: {
-    game: "./src/game.js",
+    game: "./src/start.js",
     style: "./src/stylesheets/style.css"
   },
   devtool: 'source-map',

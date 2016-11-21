@@ -17,6 +17,14 @@ class GamePlayer extends Point {
       let kc = ev.keyCode
       if (this.canJump() && (kc == 32 || kc == 38)) {
         this.performJump()
+        /*
+         * I removed the previous way of computing score.
+         * Below, by triggering a jump event, this is how you should
+         * notify the game that a new jump is actually performed
+         * then the Game instance, in case of 1 jump = 1 point, should listen
+         * for this event and a 1 point to the score
+         */
+        // this.trigger("jump")
       }
     }
   }
