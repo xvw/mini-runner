@@ -1,21 +1,70 @@
-// A small game written in JavaScript
+import GamePlayer from './GamePlayer'
+import SpritePlayer from './SpritePlayer'
+import config from './config'
 
+class Game {
+  constructor({canvas, context}) {
+    this.canvas = canvas
+    this.context = context
+    this.initializeCanvas()
+    this.player = new GamePlayer()
+    this.initializeSprites()
+    this.score = 0
+  }
 
-const canvas   = document.getElementById('game');
-const context  = canvas.getContext('2d');
+  update(game) {
+    this.redesignGround()
+    this.rewriteScore()
+    this.garbageCollector()
+    this.performUpdate()
+    // Buffered Loop
+    window.requestAnimationFrame(function() {
+      game.update(game)
+    })
+  }
 
-// ugly hack to let class manipulate the canvas and its context
-window.canvas = canvas
-window.context = context
+  rewriteScore() {
+    this.context.font      = "12px sans-serif"
+    this.context.fillStyle = config.colors.score
+    this.context.textAlign = "right"
+    
+    let f = this.score > 1 ? 'pts' : ' pt'
 
+    this.context.fillText(`${this.score} ${f}`, config.width - 8, 16)
+  }
 
-import Area from './Area'
+  redesignGround() {
+    context.clearRect(0,0,config.width, config.height)
+    context.fillStyle = config.colors.ground
+    context.fillRect(0, config.height - config.ground_h, config.width, config.ground_h)
+  }
 
-// Start the game
-var game = new Area();
+  performUpdate() {
+    // Update function
+    this.spritePlayer.update()
+  }
 
-window.requestAnimationFrame(function() {
-  game.update(game);
-});
+  initializeCanvas() {
+    this.canvas.width        = config.width
+    this.canvas.height       = config.height
+    this.canvas.style.width  = ''+config.width+'px'
+    this.canvas.style.height = ''+config.height+'px'
+  }
 
+  initializeSprites() {
+    this.spritePlayer = new SpritePlayer(this.player)
+    this.clouds  = []
+    this.objs    = []
+    this.flyings = []
+  }
 
+  garbageCollector() {
+    // Remove useless sprites
+  }
+
+  getPlayer() {
+    return this.player
+  }
+}
+
+export default Game

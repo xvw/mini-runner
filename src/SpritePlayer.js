@@ -11,8 +11,8 @@ class SpritePlayer extends Sprite {
 
   update() {
     this.player.update();
-    this.x = this.player.getX();
-    this.y = this.player.getY();
+    this.x = this.player.x;
+    this.y = this.player.y;
     this.draw(this.x, this.y);
   }
 }
