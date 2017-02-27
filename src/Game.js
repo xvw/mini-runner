@@ -1,6 +1,7 @@
 import GamePlayer from './GamePlayer'
 import SpritePlayer from './SpritePlayer'
 import SpriteCloud from './SpriteCloud'
+import SpriteObstacle from './SpriteObstacle'
 import config from './config'
 
 class Game {
@@ -45,6 +46,19 @@ class Game {
     // Update function
     this.spritePlayer.update()
     this.clouds.forEach((s) => s.update())
+    this.objs.forEach((s) => {
+      s.update()
+      this.collidingWith(s)
+    })
+  }
+
+  collidingWith(s){
+    const distX = Math.abs(
+      this.spritePlayer.x - s.x-config.obstacle_w/2);
+    const distY = Math.abs(
+      this.spritePlayer.y - s.y-config.obstacle_h/2);
+    if (distX >  (config.player_w/2 + config.obstacle_w/2))
+      return false
   }
 
   initializeCanvas() {
@@ -57,17 +71,26 @@ class Game {
   initializeSprites() {
     this.spritePlayer = new SpritePlayer(this.player)
     this.clouds  = this.initializeClouds()
-    this.objs    = []
+    this.objs    = this.initializeObstacles()
     this.flyings = []
   }
 
   initializeClouds(){
     let clouds = []
     for (let i = 0; i < 3; i++){
-      const y = Math.random() * 100
+      const y = Math.random() * 50
       clouds.push(new SpriteCloud(y))
     }
     return clouds
+  }
+
+  initializeObstacles(){
+    let obstacles = []
+    for (let i = 0; i < 3; i++){
+      const x = Math.random() * config.width + 75
+      obstacles.push(new SpriteObstacle(x))
+    }
+    return obstacles
   }
 
   garbageCollector() {
