@@ -1,5 +1,6 @@
 import GamePlayer from './GamePlayer'
 import SpritePlayer from './SpritePlayer'
+import SpriteCloud from './SpriteCloud'
 import config from './config'
 
 class Game {
@@ -27,7 +28,7 @@ class Game {
     this.context.font      = "12px sans-serif"
     this.context.fillStyle = config.colors.score
     this.context.textAlign = "right"
-    
+
     let f = this.score > 1 ? 'pts' : ' pt'
 
     this.context.fillText(`${this.score} ${f}`, config.width - 8, 16)
@@ -36,12 +37,14 @@ class Game {
   redesignGround() {
     context.clearRect(0,0,config.width, config.height)
     context.fillStyle = config.colors.ground
+    console.log(1)
     context.fillRect(0, config.height - config.ground_h, config.width, config.ground_h)
   }
 
   performUpdate() {
     // Update function
     this.spritePlayer.update()
+    this.clouds.update()
   }
 
   initializeCanvas() {
@@ -53,7 +56,7 @@ class Game {
 
   initializeSprites() {
     this.spritePlayer = new SpritePlayer(this.player)
-    this.clouds  = []
+    this.clouds  = new SpriteCloud()
     this.objs    = []
     this.flyings = []
   }
