@@ -15,6 +15,10 @@ class Sprite extends Point {
       window.context.restore()
     }
   }
+
+  update() {
+    console.log(`not implemented for ${this} - ${this.constructor.name}`)
+  }
 }
 
 export default Sprite

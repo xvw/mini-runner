@@ -3,19 +3,24 @@ const config = {
   width    : 720,
   height   : 200,
   ground_h : 16,
-  player_h : 54,
-  player_w : 32,
 
   // Character
   gravity  : 12,
   inertia  : 180,
   walkrate : 24,
+  player_h : 54,
+  player_w : 32,
+
+  // Clouds
+  cloud_h : 10,
+  cloud_w : 10,
 
   // Colors (for boxes)
   colors : {
     player : '#DBDFE8',
     ground : '#24476F',
-    score  : '#ECD900'
+    cloud : '#999999',
+    score : '#ECD900'
   }
 }
 
