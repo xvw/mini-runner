@@ -1,5 +1,7 @@
 import GamePlayer from './GamePlayer'
+import Cloud from './Cloud'
 import SpritePlayer from './SpritePlayer'
+import SpriteCloud from './SpriteCloud'
 import config from './config'
 
 class Game {
@@ -8,18 +10,21 @@ class Game {
     this.context = context
     this.initializeCanvas()
     this.player = new GamePlayer()
+    this.cloud = new Cloud()
     this.initializeSprites()
     this.score = 0
   }
 
-  update(game) {
+  update() {
     this.redesignGround()
     this.rewriteScore()
     this.garbageCollector()
+
     this.performUpdate()
+
     // Buffered Loop
-    window.requestAnimationFrame(function() {
-      game.update(game)
+    window.requestAnimationFrame(() => {
+      this.update()
     })
   }
 
@@ -27,7 +32,7 @@ class Game {
     this.context.font      = "12px sans-serif"
     this.context.fillStyle = config.colors.score
     this.context.textAlign = "right"
-    
+
     let f = this.score > 1 ? 'pts' : ' pt'
 
     this.context.fillText(`${this.score} ${f}`, config.width - 8, 16)
@@ -40,8 +45,10 @@ class Game {
   }
 
   performUpdate() {
-    // Update function
-    this.spritePlayer.update()
+    this.sprites.forEach((sprite) => {
+      //console.log("update : ", sprite)
+      sprite.update()
+    })
   }
 
   initializeCanvas() {
@@ -53,9 +60,13 @@ class Game {
 
   initializeSprites() {
     this.spritePlayer = new SpritePlayer(this.player)
-    this.clouds  = []
+    this.clouds  = [new SpriteCloud(this.cloud)]
     this.objs    = []
     this.flyings = []
+
+    this.sprites = []
+    this.sprites.push(this.spritePlayer)
+    this.sprites.concat(this.clouds, this.objs, this.flyings)
   }
 
   garbageCollector() {
