@@ -37,14 +37,14 @@ class Game {
   redesignGround() {
     context.clearRect(0,0,config.width, config.height)
     context.fillStyle = config.colors.ground
-    console.log(1)
-    context.fillRect(0, config.height - config.ground_h, config.width, config.ground_h)
+    context.fillRect(0, config.height - config.ground_h,
+      config.width, config.ground_h)
   }
 
   performUpdate() {
     // Update function
     this.spritePlayer.update()
-    this.clouds.update()
+    this.clouds.forEach((s) => s.update())
   }
 
   initializeCanvas() {
@@ -56,9 +56,18 @@ class Game {
 
   initializeSprites() {
     this.spritePlayer = new SpritePlayer(this.player)
-    this.clouds  = new SpriteCloud()
+    this.clouds  = this.initializeClouds()
     this.objs    = []
     this.flyings = []
+  }
+
+  initializeClouds(){
+    let clouds = []
+    for (let i = 0; i < 3; i++){
+      const y = Math.random() * 100
+      clouds.push(new SpriteCloud(y))
+    }
+    return clouds
   }
 
   garbageCollector() {

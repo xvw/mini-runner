@@ -3,10 +3,10 @@ import Circle from './Circle'
 import config from './config'
 
 class SpriteCloud extends Sprite {
-  constructor() {
+  constructor(y = 50) {
     super();
     this.x = config.width+config.cloud_rayon
-    this.y = 50
+    this.y = y
     this.bitmap = new Circle(
         config.colors.player,
         config.cloud_rayon
@@ -14,7 +14,7 @@ class SpriteCloud extends Sprite {
   }
 
   update() {
-    this.x -= 1
+    this.x -= 1.5
     if (this.x <= 0) this.x = config.width+config.cloud_rayon
     //console.log(this.x)
     this.draw(this.x, this.y)

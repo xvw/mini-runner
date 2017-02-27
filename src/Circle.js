@@ -8,6 +8,7 @@ class Circle extends Sprite {
     this.color  = color
     this.bitmap = new BitmapFun((c, ctx, x, y) => {
       ctx.fillStyle = this.color
+      ctx.beginPath()
       ctx.arc(x, y, this.rayon, 0, 2*Math.PI)
       ctx.fill()
     })
