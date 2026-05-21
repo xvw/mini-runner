@@ -1,4 +1,5 @@
 import Point from './Point.js'
+import config from './config'
 
 // A minimalistic Sprite representation
 class Sprite extends Point {
@@ -10,9 +11,9 @@ class Sprite extends Point {
   // Draw function
   draw(x, y) {
     if (this.bitmap !== null) {
-      window.context.save()
+      //window.context.save()
       this.bitmap.draw(x, y)
-      window.context.restore()
+      //window.context.restore()
     }
   }
 }
